@@ -198,6 +198,38 @@
     }
     els.btnNewDebate.innerHTML = isAr ? '🔄 مناظرة جديدة' : '🔄 New Debate';
 
+    // VS text
+    const vsEl = $('#vs-text');
+    if (vsEl) vsEl.textContent = isAr ? 'ضد' : 'VS';
+    const fvs = $('#final-vs-text');
+    if (fvs) fvs.textContent = isAr ? 'ضد' : 'vs';
+
+    // Round "of" text
+    const ofEl = $('#round-of-text');
+    if (ofEl) ofEl.textContent = isAr ? 'من' : 'of';
+
+    // LIVE badge
+    const liveEl = $('#live-text');
+    if (liveEl) liveEl.textContent = isAr ? 'مباشر' : 'LIVE';
+
+    // Loading text
+    const loadSpan = els.btnStart.querySelector('.btn-loading');
+    if (loadSpan) loadSpan.innerHTML = `<span class="spinner"></span> ${isAr ? 'جاري تحضير الساحة...' : 'Preparing Arena...'}`;
+    const loadRound = els.btnNextRound.querySelector('.btn-loading');
+    if (loadRound) loadRound.innerHTML = `<span class="spinner"></span> ${isAr ? 'جاري التوليد...' : 'Generating...'}`;
+
+    // PRO/CON final labels
+    $$('.pro-final .final-label').forEach(el => el.textContent = isAr ? 'المؤيد' : 'PRO');
+    $$('.con-final .final-label').forEach(el => el.textContent = isAr ? 'المعارض' : 'CON');
+
+    // Guide button
+    const guideBtn = $('#guide-btn-text');
+    if (guideBtn) guideBtn.textContent = isAr ? 'دليل' : 'Guide';
+
+    // Guide modal title
+    const guideTitle = $('#guide-modal-title');
+    if (guideTitle) guideTitle.textContent = isAr ? '📖 دليل استخدام ساحة المناظرة' : '📖 How to Use AI Debate Arena';
+
     // Verdict
     $('#verdict-title').textContent = t('theVerdict');
     $('#summary-card h4').textContent = t('debateSummary');
@@ -206,6 +238,111 @@
 
     // History modal
     $('#history-modal .modal-header h3').textContent = t('debateHistory');
+
+    // Update guide content
+    renderGuide();
+  }
+
+  // ═══ FALLACY NAME TRANSLATION ═══
+  const fallacyTranslations = {
+    'Ad Hominem': 'مهاجمة الشخص',
+    'Strawman': 'رجل القش',
+    'False Equivalence': 'تكافؤ زائف',
+    'Appeal to Authority': 'استدلال بالسلطة',
+    'Slippery Slope': 'المنحدر الزلق',
+    'Red Herring': 'تحويل الانتباه',
+    'Circular Reasoning': 'استدلال دائري',
+    'Hasty Generalization': 'تعميم متسرع',
+    'Appeal to Emotion': 'استدلال بالعاطفة',
+    'False Dichotomy': 'ثنائية زائفة',
+  };
+
+  function translateFallacyName(name) {
+    if (state.language !== 'ar') return name;
+    for (const [en, ar] of Object.entries(fallacyTranslations)) {
+      if (name.toLowerCase().includes(en.toLowerCase())) return ar;
+    }
+    return name;
+  }
+
+  // ═══ GUIDE CONTENT ═══
+  function renderGuide() {
+    const container = $('#guide-content');
+    if (!container) return;
+
+    if (state.language === 'ar') {
+      container.innerHTML = `
+        <div style="direction:rtl;text-align:right;line-height:2">
+          <h4 style="margin-bottom:12px;color:var(--pro-light)">🎯 كيف تستخدم ساحة المناظرة؟</h4>
+          <div class="history-item" style="cursor:default">
+            <strong>١. اختر الموضوع</strong><br>
+            اكتب أي موضوع تريد مناظرته أو اختر من المواضيع المقترحة. يمكنك الكتابة بالعربية أو الإنجليزية.
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>٢. اختر عدد الجولات</strong><br>
+            ٣ جولات (سريع) · ٥ جولات (متوسط) · ٧ جولات (عميق ومفصل)
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>٣. شاهد المناظرة</strong><br>
+            وكيلان ذكاء اصطناعي — المؤيد ⚡ والمعارض 🔥 — يتناوبان تقديم حججهم. كل حجة تُقيَّم فوريًا.
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>٤. نظام التقييم</strong><br>
+            <span style="color:var(--pro-light)">المنطق</span> — هل الاستدلال صحيح؟<br>
+            <span style="color:var(--pro-light)">الأدلة</span> — هل يستشهد بحقائق ودراسات؟<br>
+            <span style="color:var(--pro-light)">البلاغة</span> — هل الحجة مقنعة وجذابة؟
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>٥. كشف المغالطات</strong><br>
+            الذكاء الاصطناعي يكشف المغالطات المنطقية مثل: رجل القش، استدلال بالسلطة، تعميم متسرع، المنحدر الزلق وغيرها. كل مغالطة تخصم ٥ نقاط!
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>٦. صوّت!</strong><br>
+            صوّت للمؤيد أو المعارض — تصويتك يؤثر على استراتيجية الذكاء الاصطناعي في الجولة التالية!
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>⌨️ اختصارات لوحة المفاتيح</strong><br>
+            <code>N</code> = الجولة التالية · <code>P</code> = صوّت للمؤيد · <code>C</code> = صوّت للمعارض
+          </div>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div style="line-height:2">
+          <h4 style="margin-bottom:12px;color:var(--pro-light)">🎯 How to Use the Arena</h4>
+          <div class="history-item" style="cursor:default">
+            <strong>1. Choose a Topic</strong><br>
+            Type any debate topic or pick from suggested ones. Works in both English and Arabic.
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>2. Select Rounds</strong><br>
+            3 rounds (quick) · 5 rounds (balanced) · 7 rounds (deep & detailed)
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>3. Watch the Debate</strong><br>
+            Two AI agents — PRO ⚡ and CON 🔥 — take turns presenting arguments. Each is scored in real-time.
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>4. Scoring System</strong><br>
+            <span style="color:var(--pro-light)">Logic</span> — Is the reasoning valid?<br>
+            <span style="color:var(--pro-light)">Evidence</span> — Does it cite facts & studies?<br>
+            <span style="color:var(--pro-light)">Rhetoric</span> — Is the argument compelling?
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>5. Fallacy Detection</strong><br>
+            The AI Judge detects logical fallacies: Strawman, Appeal to Authority, Hasty Generalization, Slippery Slope, and more. Each fallacy deducts 5 points!
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>6. Vote!</strong><br>
+            Vote for PRO or CON — your vote influences the AI's strategy in the next round!
+          </div>
+          <div class="history-item" style="cursor:default">
+            <strong>⌨️ Keyboard Shortcuts</strong><br>
+            <code>N</code> = Next Round · <code>P</code> = Vote PRO · <code>C</code> = Vote CON
+          </div>
+        </div>
+      `;
+    }
   }
 
   // ═══ DOM REFS ═══
@@ -517,7 +654,7 @@
       setTimeout(() => {
         const tag = document.createElement('div');
         tag.className = 'fallacy-tag';
-        tag.innerHTML = `⚠️ <strong>${f.name}</strong>: ${f.explanation || ''}`;
+        tag.innerHTML = `⚠️ <strong>${translateFallacyName(f.name)}</strong>: ${f.explanation || ''}`;
         container.appendChild(tag);
       }, i * 300);
     });
@@ -813,6 +950,22 @@
     els.historyModal.addEventListener('click', (e) => {
       if (e.target === els.historyModal) els.historyModal.style.display = 'none';
     });
+
+    // Guide
+    const btnGuide = $('#btn-guide');
+    const btnCloseGuide = $('#btn-close-guide');
+    const guideModal = $('#guide-modal');
+    if (btnGuide && btnCloseGuide && guideModal) {
+      btnGuide.addEventListener('click', () => {
+        guideModal.style.display = 'flex';
+      });
+      btnCloseGuide.addEventListener('click', () => {
+        guideModal.style.display = 'none';
+      });
+      guideModal.addEventListener('click', (e) => {
+        if (e.target === guideModal) guideModal.style.display = 'none';
+      });
+    }
 
     // Theme
     els.btnTheme.addEventListener('click', toggleTheme);

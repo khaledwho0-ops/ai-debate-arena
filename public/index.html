@@ -18,9 +18,13 @@
     <div class="header-left">
       <span class="logo-icon">⚔️</span>
       <h1 class="logo-text">AI Debate Arena</h1>
-      <span class="badge badge-live" id="live-badge" style="display:none">● LIVE</span>
+      <span class="badge badge-live" id="live-badge" style="display:none">● <span id="live-text">LIVE</span></span>
     </div>
     <div class="header-right">
+      <button class="btn btn-ghost" id="btn-guide" title="How to Use">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span id="guide-btn-text">Guide</span>
+      </button>
       <button class="btn btn-ghost" id="btn-history" title="Debate History">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
         <span>History</span>
@@ -92,7 +96,7 @@
     <div class="round-banner" id="round-banner">
       <span class="round-label">ROUND</span>
       <span class="round-number" id="round-number">1</span>
-      <span class="round-of">of <span id="round-total">5</span></span>
+      <span class="round-of"><span id="round-of-text">of</span> <span id="round-total">5</span></span>
     </div>
 
     <!-- Debate Stage -->
@@ -127,7 +131,7 @@
       <!-- VS Divider -->
       <div class="vs-divider">
         <div class="vs-circle">
-          <span class="vs-text">VS</span>
+          <span class="vs-text" id="vs-text">VS</span>
         </div>
         <div class="score-comparison">
           <div class="total-bar">
@@ -218,7 +222,7 @@
         <h3 class="winner-name" id="winner-name">Agent PRO Wins!</h3>
         <div class="final-scores">
           <div class="final-score pro-final"><span class="final-label">PRO</span><span class="final-num" id="final-pro-score">0</span></div>
-          <div class="final-vs">vs</div>
+          <div class="final-vs" id="final-vs-text">vs</div>
           <div class="final-score con-final"><span class="final-label">CON</span><span class="final-num" id="final-con-score">0</span></div>
         </div>
       </div>
@@ -244,6 +248,17 @@
       <div class="modal-body" id="history-list">
         <div class="empty-state">No debates yet. Start your first one!</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ GUIDE MODAL ═══ -->
+  <div class="modal-overlay" id="guide-modal" style="display:none">
+    <div class="modal" style="max-width:700px">
+      <div class="modal-header">
+        <h3 id="guide-modal-title">📖 How to Use AI Debate Arena</h3>
+        <button class="btn btn-icon modal-close" id="btn-close-guide">✕</button>
+      </div>
+      <div class="modal-body" id="guide-content"></div>
     </div>
   </div>
 
