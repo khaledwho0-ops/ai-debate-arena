@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Debate Arena ⚔️ — Two AIs Fight. You Judge.</title>
+  <meta name="description" content="Watch two AI agents debate any topic in real-time. Vote, detect fallacies, and see who wins. Multi-agent AI architecture with live scoring.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- ═══ PARTICLE BACKGROUND ═══ -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo-icon">⚔️</span>
+      <h1 class="logo-text">AI Debate Arena</h1>
+      <span class="badge badge-live" id="live-badge" style="display:none">● LIVE</span>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-ghost" id="btn-history" title="Debate History">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+        <span>History</span>
+      </button>
+      <button class="btn btn-ghost" id="btn-theme" title="Toggle Theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button class="btn btn-ghost" id="btn-lang" title="Switch Language">
+        <span id="lang-label">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ SETUP SCREEN ═══ -->
+  <main class="screen screen-setup" id="screen-setup">
+    <div class="setup-container">
+      <div class="setup-hero">
+        <div class="hero-swords">⚔️</div>
+        <h2 class="hero-title">Two AIs Enter. One Wins.</h2>
+        <p class="hero-subtitle">Pick any topic. Watch two AI agents battle with real-time arguments, scoring, and fallacy detection. You be the judge.</p>
+      </div>
+
+      <div class="setup-form">
+        <div class="input-group">
+          <label for="topic-input" class="input-label">Debate Topic</label>
+          <div class="input-wrapper">
+            <input type="text" id="topic-input" class="input-field" placeholder="e.g. AI will create more jobs than it destroys..." maxlength="200">
+            <button class="btn btn-icon" id="btn-random-topic" title="Random Topic">🎲</button>
+          </div>
+          <div class="char-count"><span id="char-count">0</span>/200</div>
+        </div>
+
+        <div class="setup-options">
+          <div class="option-group">
+            <label class="input-label">Rounds</label>
+            <div class="round-selector">
+              <button class="round-btn" data-rounds="3">3</button>
+              <button class="round-btn active" data-rounds="5">5</button>
+              <button class="round-btn" data-rounds="7">7</button>
+            </div>
+          </div>
+          <div class="option-group">
+            <label class="input-label">Language</label>
+            <div class="round-selector">
+              <button class="lang-btn active" data-lang="en">English</button>
+              <button class="lang-btn" data-lang="ar">العربية</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" id="btn-start-debate">
+          <span class="btn-text">⚔️ Start Debate</span>
+          <span class="btn-loading" style="display:none">
+            <span class="spinner"></span> Preparing Arena...
+          </span>
+        </button>
+      </div>
+
+      <div class="suggested-topics" id="suggested-topics">
+        <h3 class="section-title">🔥 Suggested Topics</h3>
+        <div class="topics-grid" id="topics-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ DEBATE SCREEN ═══ -->
+  <main class="screen screen-debate" id="screen-debate" style="display:none">
+    <!-- Round Banner -->
+    <div class="round-banner" id="round-banner">
+      <span class="round-label">ROUND</span>
+      <span class="round-number" id="round-number">1</span>
+      <span class="round-of">of <span id="round-total">5</span></span>
+    </div>
+
+    <!-- Debate Stage -->
+    <div class="debate-stage">
+      <!-- PRO Side -->
+      <div class="agent-panel agent-pro" id="panel-pro">
+        <div class="agent-header">
+          <div class="agent-avatar pro-avatar">⚡</div>
+          <div class="agent-info">
+            <h3 class="agent-name">Agent PRO</h3>
+            <span class="agent-stance">Supporting</span>
+          </div>
+          <div class="agent-score-badge" id="pro-score-badge">0</div>
+        </div>
+        <div class="agent-body">
+          <div class="argument-box" id="pro-argument">
+            <div class="thinking-indicator" id="pro-thinking" style="display:none">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="thinking-text">Formulating argument...</span>
+            </div>
+            <div class="argument-text" id="pro-text"></div>
+          </div>
+          <div class="fallacy-alerts" id="pro-fallacies"></div>
+        </div>
+        <div class="agent-scores-detail" id="pro-scores-detail">
+          <div class="score-bar"><span class="score-label">Logic</span><div class="bar"><div class="bar-fill" id="pro-logic-bar"></div></div><span class="score-val" id="pro-logic-val">—</span></div>
+          <div class="score-bar"><span class="score-label">Evidence</span><div class="bar"><div class="bar-fill" id="pro-evidence-bar"></div></div><span class="score-val" id="pro-evidence-val">—</span></div>
+          <div class="score-bar"><span class="score-label">Rhetoric</span><div class="bar"><div class="bar-fill" id="pro-rhetoric-bar"></div></div><span class="score-val" id="pro-rhetoric-val">—</span></div>
+        </div>
+      </div>
+
+      <!-- VS Divider -->
+      <div class="vs-divider">
+        <div class="vs-circle">
+          <span class="vs-text">VS</span>
+        </div>
+        <div class="score-comparison">
+          <div class="total-bar">
+            <div class="total-fill-pro" id="total-fill-pro" style="width:50%"></div>
+            <div class="total-fill-con" id="total-fill-con" style="width:50%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CON Side -->
+      <div class="agent-panel agent-con" id="panel-con">
+        <div class="agent-header">
+          <div class="agent-avatar con-avatar">🔥</div>
+          <div class="agent-info">
+            <h3 class="agent-name">Agent CON</h3>
+            <span class="agent-stance">Opposing</span>
+          </div>
+          <div class="agent-score-badge" id="con-score-badge">0</div>
+        </div>
+        <div class="agent-body">
+          <div class="argument-box" id="con-argument">
+            <div class="thinking-indicator" id="con-thinking" style="display:none">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="thinking-text">Formulating argument...</span>
+            </div>
+            <div class="argument-text" id="con-text"></div>
+          </div>
+          <div class="fallacy-alerts" id="con-fallacies"></div>
+        </div>
+        <div class="agent-scores-detail" id="con-scores-detail">
+          <div class="score-bar"><span class="score-label">Logic</span><div class="bar"><div class="bar-fill" id="con-logic-bar"></div></div><span class="score-val" id="con-logic-val">—</span></div>
+          <div class="score-bar"><span class="score-label">Evidence</span><div class="bar"><div class="bar-fill" id="con-evidence-bar"></div></div><span class="score-val" id="con-evidence-val">—</span></div>
+          <div class="score-bar"><span class="score-label">Rhetoric</span><div class="bar"><div class="bar-fill" id="con-rhetoric-bar"></div></div><span class="score-val" id="con-rhetoric-val">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic Display -->
+    <div class="topic-display">
+      <span class="topic-label">TOPIC</span>
+      <p class="topic-text" id="debate-topic-text"></p>
+    </div>
+
+    <!-- Voting Bar -->
+    <div class="voting-section">
+      <div class="vote-bar-container">
+        <div class="vote-bar">
+          <div class="vote-fill-pro" id="vote-fill-pro" style="width:50%">
+            <span class="vote-pct" id="vote-pct-pro">50%</span>
+          </div>
+          <div class="vote-fill-con" id="vote-fill-con" style="width:50%">
+            <span class="vote-pct" id="vote-pct-con">50%</span>
+          </div>
+        </div>
+      </div>
+      <div class="vote-buttons">
+        <button class="btn btn-vote btn-vote-pro" id="btn-vote-pro">👍 Vote PRO</button>
+        <span class="vote-count" id="vote-count">0 votes</span>
+        <button class="btn btn-vote btn-vote-con" id="btn-vote-con">👍 Vote CON</button>
+      </div>
+    </div>
+
+    <!-- Control Bar -->
+    <div class="control-bar">
+      <button class="btn btn-primary" id="btn-next-round">
+        <span class="btn-text">⚡ Next Round</span>
+        <span class="btn-loading" style="display:none"><span class="spinner"></span> Generating...</span>
+      </button>
+      <button class="btn btn-ghost" id="btn-new-debate">🔄 New Debate</button>
+    </div>
+
+    <!-- Scoring Explanation -->
+    <div class="scoring-explanation" id="scoring-explanation" style="display:none">
+      <div class="explanation-icon">🧠</div>
+      <p class="explanation-text" id="explanation-text"></p>
+    </div>
+  </main>
+
+  <!-- ═══ VERDICT SCREEN ═══ -->
+  <main class="screen screen-verdict" id="screen-verdict" style="display:none">
+    <div class="verdict-container">
+      <div class="verdict-animation" id="verdict-animation">
+        <div class="gavel">🔨</div>
+      </div>
+      <h2 class="verdict-title" id="verdict-title">THE VERDICT</h2>
+      <div class="winner-card" id="winner-card">
+        <span class="winner-emoji" id="winner-emoji">🏆</span>
+        <h3 class="winner-name" id="winner-name">Agent PRO Wins!</h3>
+        <div class="final-scores">
+          <div class="final-score pro-final"><span class="final-label">PRO</span><span class="final-num" id="final-pro-score">0</span></div>
+          <div class="final-vs">vs</div>
+          <div class="final-score con-final"><span class="final-label">CON</span><span class="final-num" id="final-con-score">0</span></div>
+        </div>
+      </div>
+      <div class="summary-card" id="summary-card">
+        <h4>📋 Debate Summary</h4>
+        <p id="summary-text"></p>
+        <div class="key-moments" id="key-moments"></div>
+      </div>
+      <div class="verdict-actions">
+        <button class="btn btn-primary btn-lg" id="btn-new-debate-2">⚔️ New Debate</button>
+        <button class="btn btn-ghost" id="btn-share">📤 Share Result</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ HISTORY MODAL ═══ -->
+  <div class="modal-overlay" id="history-modal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📜 Debate History</h3>
+        <button class="btn btn-icon modal-close" id="btn-close-history">✕</button>
+      </div>
+      <div class="modal-body" id="history-list">
+        <div class="empty-state">No debates yet. Start your first one!</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
