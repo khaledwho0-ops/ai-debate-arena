@@ -32,23 +32,26 @@ A real-time multi-agent AI debate platform where two AI agents argue opposing si
 
 ## 📦 Setup & Deployment
 
-### Option A: Make it "Work by Itself" 24/7 (Cloud Deployment)
-Since the code is on your GitHub, the absolute easiest way to make it run permanently by itself in the cloud (for free) is to use Render.
+### Make it "Work by Itself" 24/7 for FREE (Hugging Face Spaces)
+Because Render now requires a credit card even for free tiers, the **absolute best completely free** option (no credit card required) is **Hugging Face Spaces**! 
 
-1. Go to **[Render.com Dashboard](https://dashboard.render.com/)** and sign in with GitHub.
-2. Click the **"New +"** button in the top right and select **"Web Service"**.
-3. Select **"Build and deploy from a Git repository"** and choose your `ai-debate-arena` repository.
-4. Fill in the deployment settings:
-   - **Name:** ai-debate-arena
-   - **Language:** Node
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-   - **Instance Type:** Select the **Free** tier.
-5. Expand **"Advanced"** and click **"Add Environment Variable"**. Add your keys:
-   - Key: `GEMINI_API_KEY` | Value: `your_gemini_key_here`
-   - Key: `GROQ_API_KEY` | Value: `your_groq_key_here`
-6. Click **Create Web Service**. 
-*Your app will now run 24/7 by itself without needing your computer on!*
+I have already configured the `Dockerfile` specifically for Hugging Face.
+
+1. Create a free account at **[huggingface.co/join](https://huggingface.co/join)** (No credit card needed).
+2. Go to **[huggingface.co/new-space](https://huggingface.co/new-space)**.
+3. Fill out the form:
+   - **Space name:** `ai-debate-arena`
+   - **License:** `mit`
+   - **Select the Space SDK:** Choose **Docker** -> **Blank**.
+   - **Space Hardware:** Free
+   - Click **Create Space**.
+4. You will see a setup screen. At the very top right, click **Settings**.
+5. Scroll down to **Variables and secrets**. Click **New secret** and add your keys:
+   - Name: `GEMINI_API_KEY` | Value: `your_gemini_key_here`
+   - Name: `GROQ_API_KEY` | Value: `your_groq_key_here`
+6. Go back to the **App** tab. In the setup instructions, you'll see a link to "clone" or upload files.
+7. You can simply drag and drop the files from your computer into the Hugging Face files section, or click **"Files"** at the top, click **"Add file"** -> **"Upload files"**, and select all the files from this folder.
+8. Commit the changes. The Space will automatically build and launch your Arena forever!
 
 ### Option B: Local Setup
 ```bash
