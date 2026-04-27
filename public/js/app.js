@@ -11,12 +11,202 @@
     language: 'en',
     rounds: 5,
     currentRound: 0,
-    status: 'idle', // idle, active, completed
+    status: 'idle',
     proTotalScore: 0,
     conTotalScore: 0,
     ws: null,
     isRunning: false,
   };
+
+  // ═══ i18n TRANSLATIONS ═══
+  const i18n = {
+    en: {
+      logoText: 'AI Debate Arena',
+      history: 'History',
+      heroTitle: 'Two AIs Enter. One Wins.',
+      heroSubtitle: 'Pick any topic. Watch two AI agents battle with real-time arguments, scoring, and fallacy detection. You be the judge.',
+      debateTopic: 'Debate Topic',
+      topicPlaceholder: 'e.g. AI will create more jobs than it destroys...',
+      rounds: 'Rounds',
+      language: 'Language',
+      startDebate: '⚔️ Start Debate',
+      preparingArena: 'Preparing Arena...',
+      suggestedTopics: '🔥 Suggested Topics',
+      roundLabel: 'ROUND',
+      of: 'of',
+      agentPro: 'Agent PRO',
+      agentCon: 'Agent CON',
+      supporting: 'Supporting',
+      opposing: 'Opposing',
+      thinking: 'Formulating argument...',
+      waitingArg: 'Waiting for argument...',
+      logic: 'Logic',
+      evidence: 'Evidence',
+      rhetoric: 'Rhetoric',
+      topicLabel: 'TOPIC',
+      votePro: '👍 Vote PRO',
+      voteCon: '👍 Vote CON',
+      votes: 'votes',
+      nextRound: '⚡ Next Round',
+      startRound1: '⚡ Start Round 1',
+      generating: 'Generating...',
+      newDebate: '🔄 New Debate',
+      seeVerdict: '🏆 See Verdict',
+      judgeScoring: '🧠 AI Judge is scoring both arguments...',
+      theVerdict: 'THE VERDICT',
+      proWins: 'Agent PRO Wins!',
+      conWins: 'Agent CON Wins!',
+      draw: "It's a Draw!",
+      debateSummary: '📋 Debate Summary',
+      newDebate2: '⚔️ New Debate',
+      shareResult: '📤 Share Result',
+      debateHistory: '📜 Debate History',
+      noDebates: 'No debates yet. Start your first one!',
+      proWon: '⚡ PRO Won',
+      conWon: '🔥 CON Won',
+      drawResult: '🤝 Draw',
+      inProgress: '⏳ In Progress',
+      english: 'English',
+      arabic: 'العربية',
+      copied: 'Result copied to clipboard!',
+    },
+    ar: {
+      logoText: 'ساحة المناظرة الذكية',
+      history: 'السجل',
+      heroTitle: 'ذكاءان يدخلان. واحد يفوز.',
+      heroSubtitle: 'اختر أي موضوع. شاهد وكيلين ذكاء اصطناعي يتنافسان بحجج فورية، تقييم مباشر، وكشف المغالطات المنطقية. أنت الحكم.',
+      debateTopic: 'موضوع المناظرة',
+      topicPlaceholder: 'مثال: الذكاء الاصطناعي سيخلق وظائف أكثر مما يدمر...',
+      rounds: 'الجولات',
+      language: 'اللغة',
+      startDebate: '⚔️ ابدأ المناظرة',
+      preparingArena: 'جاري تحضير الساحة...',
+      suggestedTopics: '🔥 مواضيع مقترحة',
+      roundLabel: 'الجولة',
+      of: 'من',
+      agentPro: 'الوكيل المؤيد',
+      agentCon: 'الوكيل المعارض',
+      supporting: 'مؤيد',
+      opposing: 'معارض',
+      thinking: 'يصوغ الحجة...',
+      waitingArg: 'في انتظار الحجة...',
+      logic: 'المنطق',
+      evidence: 'الأدلة',
+      rhetoric: 'البلاغة',
+      topicLabel: 'الموضوع',
+      votePro: '👍 صوّت للمؤيد',
+      voteCon: '👍 صوّت للمعارض',
+      votes: 'أصوات',
+      nextRound: '⚡ الجولة التالية',
+      startRound1: '⚡ ابدأ الجولة الأولى',
+      generating: 'جاري التوليد...',
+      newDebate: '🔄 مناظرة جديدة',
+      seeVerdict: '🏆 عرض الحكم',
+      judgeScoring: '🧠 الحَكَم الذكي يقيّم الحجتين...',
+      theVerdict: 'الحُكم النهائي',
+      proWins: 'الوكيل المؤيد يفوز!',
+      conWins: 'الوكيل المعارض يفوز!',
+      draw: 'تعادل!',
+      debateSummary: '📋 ملخص المناظرة',
+      newDebate2: '⚔️ مناظرة جديدة',
+      shareResult: '📤 مشاركة النتيجة',
+      debateHistory: '📜 سجل المناظرات',
+      noDebates: 'لا توجد مناظرات بعد. ابدأ أول واحدة!',
+      proWon: '⚡ المؤيد فاز',
+      conWon: '🔥 المعارض فاز',
+      drawResult: '🤝 تعادل',
+      inProgress: '⏳ جاري',
+      english: 'English',
+      arabic: 'العربية',
+      copied: 'تم نسخ النتيجة!',
+    }
+  };
+
+  function t(key) { return i18n[state.language]?.[key] || i18n.en[key] || key; }
+
+  function applyLanguage() {
+    const lang = state.language;
+    const isAr = lang === 'ar';
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+    if (isAr) { document.body.classList.add('rtl'); } else { document.body.classList.remove('rtl'); }
+
+    // Header
+    $('.logo-text').textContent = t('logoText');
+    $('#btn-history span')?.textContent && ($('#btn-history span').textContent = t('history'));
+
+    // Hero
+    $('.hero-title').textContent = t('heroTitle');
+    $('.hero-subtitle').textContent = t('heroSubtitle');
+
+    // Setup form
+    $$('.input-label').forEach((el, i) => {
+      if (i === 0) el.textContent = t('debateTopic');
+      // rounds and language labels handled by option-group
+    });
+    els.topicInput.placeholder = t('topicPlaceholder');
+    els.btnStart.querySelector('.btn-text').textContent = t('startDebate');
+
+    // Option labels
+    const optLabels = $$('.option-group .input-label');
+    if (optLabels[0]) optLabels[0].textContent = t('rounds');
+    if (optLabels[1]) optLabels[1].textContent = t('language');
+
+    // Section title
+    const st = $('.section-title');
+    if (st) st.textContent = t('suggestedTopics');
+
+    // Debate screen
+    const rl = $('.round-label');
+    if (rl) rl.textContent = t('roundLabel');
+
+    // Agent names
+    $$('.agent-pro .agent-name').forEach(el => el.textContent = t('agentPro'));
+    $$('.agent-con .agent-name').forEach(el => el.textContent = t('agentCon'));
+    $$('.agent-pro .agent-stance').forEach(el => el.textContent = t('supporting'));
+    $$('.agent-con .agent-stance').forEach(el => el.textContent = t('opposing'));
+
+    // Thinking text
+    $$('.thinking-text').forEach(el => el.textContent = t('thinking'));
+
+    // Score labels
+    $$('.agent-pro .score-label').forEach((el, i) => {
+      el.textContent = [t('logic'), t('evidence'), t('rhetoric')][i] || el.textContent;
+    });
+    $$('.agent-con .score-label').forEach((el, i) => {
+      el.textContent = [t('logic'), t('evidence'), t('rhetoric')][i] || el.textContent;
+    });
+
+    // Topic label
+    const tl = $('.topic-label');
+    if (tl) tl.textContent = t('topicLabel');
+
+    // Vote buttons
+    els.btnVotePro.textContent = t('votePro');
+    els.btnVoteCon.textContent = t('voteCon');
+
+    // Control buttons
+    if (!state.isRunning) {
+      const btnText = els.btnNextRound.querySelector('.btn-text');
+      if (state.currentRound === 0) {
+        btnText.textContent = t('startRound1');
+      } else if (state.currentRound >= state.rounds) {
+        btnText.textContent = t('seeVerdict');
+      } else {
+        btnText.textContent = isAr ? `⚡ الجولة التالية (${state.currentRound + 1}/${state.rounds})` : `⚡ Next Round (${state.currentRound + 1}/${state.rounds})`;
+      }
+    }
+    els.btnNewDebate.innerHTML = isAr ? '🔄 مناظرة جديدة' : '🔄 New Debate';
+
+    // Verdict
+    $('#verdict-title').textContent = t('theVerdict');
+    $('#summary-card h4').textContent = t('debateSummary');
+    els.btnNewDebate2.innerHTML = isAr ? '⚔️ مناظرة جديدة' : '⚔️ New Debate';
+    els.btnShare.innerHTML = isAr ? '📤 مشاركة النتيجة' : '📤 Share Result';
+
+    // History modal
+    $('#history-modal .modal-header h3').textContent = t('debateHistory');
+  }
 
   // ═══ DOM REFS ═══
   const $ = (sel) => document.querySelector(sel);
@@ -220,7 +410,7 @@
 
   function onScoringStart() {
     els.scoringExplanation.style.display = 'flex';
-    els.explanationText.textContent = '🧠 AI Judge is scoring both arguments...';
+    els.explanationText.textContent = t('judgeScoring');
   }
 
   function onRoundComplete(data) {
@@ -261,9 +451,12 @@
 
     // Update button text
     if (state.currentRound >= state.rounds) {
-      els.btnNextRound.querySelector('.btn-text').textContent = '🏆 See Verdict';
+      els.btnNextRound.querySelector('.btn-text').textContent = t('seeVerdict');
     } else {
-      els.btnNextRound.querySelector('.btn-text').textContent = `⚡ Next Round (${state.currentRound + 1}/${state.rounds})`;
+      const isAr = state.language === 'ar';
+      els.btnNextRound.querySelector('.btn-text').textContent = isAr
+        ? `⚡ الجولة التالية (${state.currentRound + 1}/${state.rounds})`
+        : `⚡ Next Round (${state.currentRound + 1}/${state.rounds})`;
     }
 
     els.liveBadge.style.display = 'none';
@@ -277,7 +470,7 @@
     const isProWin = data.winner === 'pro';
     const isDraw = data.winner === 'draw';
     els.winnerEmoji.textContent = isDraw ? '🤝' : '🏆';
-    els.winnerName.textContent = isDraw ? "It's a Draw!" : isProWin ? 'Agent PRO Wins!' : 'Agent CON Wins!';
+    els.winnerName.textContent = isDraw ? t('draw') : isProWin ? t('proWins') : t('conWins');
     els.winnerName.style.color = isDraw ? 'var(--accent)' : isProWin ? 'var(--pro-light)' : 'var(--con-light)';
     els.finalProScore.textContent = data.proTotal;
     els.finalConScore.textContent = data.conTotal;
@@ -303,7 +496,7 @@
     els.voteFillCon.style.width = `${conPct}%`;
     els.votePctPro.textContent = `${proPct}%`;
     els.votePctCon.textContent = `${conPct}%`;
-    els.voteCount.textContent = `${data.proVotes + data.conVotes} votes`;
+    els.voteCount.textContent = `${data.proVotes + data.conVotes} ${t('votes')}`;
   }
 
   // ═══ UI HELPERS ═══
@@ -376,13 +569,9 @@
       els.conScoreBadge.textContent = '0';
       els.proText.textContent = '';
       els.conText.textContent = '';
-      els.btnNextRound.querySelector('.btn-text').textContent = '⚡ Start Round 1';
+      els.btnNextRound.querySelector('.btn-text').textContent = t('startRound1');
 
-      if (state.language === 'ar') {
-        document.body.classList.add('rtl');
-      } else {
-        document.body.classList.remove('rtl');
-      }
+      applyLanguage();
 
       showScreen('debate');
 
@@ -459,16 +648,18 @@
       const data = await API.get('/api/debates');
       els.historyList.innerHTML = '';
       if (!data.debates || data.debates.length === 0) {
-        els.historyList.innerHTML = '<div class="empty-state">No debates yet. Start your first one!</div>';
+        els.historyList.innerHTML = `<div class="empty-state">${t('noDebates')}</div>`;
         return;
       }
       data.debates.forEach(d => {
         const item = document.createElement('div');
         item.className = 'history-item';
-        const winner = d.winner === 'pro' ? '⚡ PRO Won' : d.winner === 'con' ? '🔥 CON Won' : d.winner === 'draw' ? '🤝 Draw' : '⏳ In Progress';
+        const winner = d.winner === 'pro' ? t('proWon') : d.winner === 'con' ? t('conWon') : d.winner === 'draw' ? t('drawResult') : t('inProgress');
+        const langName = d.language === 'ar' ? t('arabic') : t('english');
+        const roundsWord = state.language === 'ar' ? 'جولات' : 'rounds';
         item.innerHTML = `
           <div class="history-topic">${d.topic}</div>
-          <div class="history-meta">${winner} · ${d.total_rounds} rounds · ${d.language === 'ar' ? 'العربية' : 'English'}</div>
+          <div class="history-meta">${winner} · ${d.total_rounds} ${roundsWord} · ${langName}</div>
         `;
         els.historyList.appendChild(item);
       });
@@ -588,6 +779,7 @@
         btn.classList.add('active');
         state.language = btn.dataset.lang;
         els.langLabel.textContent = state.language === 'ar' ? 'AR' : 'EN';
+        applyLanguage();
       });
     });
 
@@ -632,6 +824,7 @@
       $$('.lang-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.lang === state.language);
       });
+      applyLanguage();
     });
 
     // Keyboard shortcuts
