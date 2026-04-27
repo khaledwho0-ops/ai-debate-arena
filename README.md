@@ -30,8 +30,20 @@ A real-time multi-agent AI debate platform where two AI agents argue opposing si
 | AI Fallback | GitHub Models, NVIDIA NIM |
 | Security | express-rate-limit, .env, server-side API proxy |
 
-## 📦 Setup
+## 📦 Setup & Deployment
 
+### Option A: Make it "Work by Itself" 24/7 (Cloud Deployment)
+Since the code is on your GitHub, the absolute easiest way to make it run permanently by itself in the cloud (for free) is to use Render.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/khaledwho0-ops/ai-debate-arena)
+
+1. Click the button above 👆
+2. Sign in with GitHub.
+3. In the Render dashboard, add your `GEMINI_API_KEY` and `GROQ_API_KEY` under the Environment Variables section.
+4. Click **Create Web Service**. 
+*Your app will now run 24/7 by itself without needing your computer on!*
+
+### Option B: Local Setup
 ```bash
 # 1. Install dependencies
 npm install
