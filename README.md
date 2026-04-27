@@ -35,12 +35,19 @@ A real-time multi-agent AI debate platform where two AI agents argue opposing si
 ### Option A: Make it "Work by Itself" 24/7 (Cloud Deployment)
 Since the code is on your GitHub, the absolute easiest way to make it run permanently by itself in the cloud (for free) is to use Render.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/khaledwho0-ops/ai-debate-arena)
-
-1. Click the button above 👆
-2. Sign in with GitHub.
-3. In the Render dashboard, add your `GEMINI_API_KEY` and `GROQ_API_KEY` under the Environment Variables section.
-4. Click **Create Web Service**. 
+1. Go to **[Render.com Dashboard](https://dashboard.render.com/)** and sign in with GitHub.
+2. Click the **"New +"** button in the top right and select **"Web Service"**.
+3. Select **"Build and deploy from a Git repository"** and choose your `ai-debate-arena` repository.
+4. Fill in the deployment settings:
+   - **Name:** ai-debate-arena
+   - **Language:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Instance Type:** Select the **Free** tier.
+5. Expand **"Advanced"** and click **"Add Environment Variable"**. Add your keys:
+   - Key: `GEMINI_API_KEY` | Value: `your_gemini_key_here`
+   - Key: `GROQ_API_KEY` | Value: `your_groq_key_here`
+6. Click **Create Web Service**. 
 *Your app will now run 24/7 by itself without needing your computer on!*
 
 ### Option B: Local Setup
