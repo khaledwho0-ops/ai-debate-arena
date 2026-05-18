@@ -22,6 +22,10 @@
 
 ---
 
+> **📌 Project Status:** This app runs fully locally with `npm run dev`. You need at least **one AI API key** (all are free tier) to start debates — see the [API Keys](#-api-keys-all-free) table below. The multi-provider fallback system means any single key is enough to get started.
+
+---
+
 ## ✨ Features
 
 - **Dual AI Agents** — PRO and CON agents with memory of all previous rounds
